@@ -24,6 +24,7 @@ class RegisterController extends AbstractController
 
         //si le formulaire est soumis alors
         if ($form->isSubmitted() && $form->isValid()) {
+            // dd($form->getData());
             $entityManager->persist($user); //prépare l'objet $user à être inséré dans la base de données
             $entityManager->flush(); //exécute réellement l'insertion ou la mise à jour dans la base de données.
         }
