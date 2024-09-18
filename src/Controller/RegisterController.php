@@ -24,9 +24,17 @@ class RegisterController extends AbstractController
 
         //si le formulaire est soumis alors
         if ($form->isSubmitted() && $form->isValid()) {
+
             // dd($form->getData());
-            $entityManager->persist($user); //prépare l'objet $user à être inséré dans la base de données
+            $entityManager->persist($user); //prépare l'objet $user à être inséré dans la base de données (persist lorsque new user)
             $entityManager->flush(); //exécute réellement l'insertion ou la mise à jour dans la base de données.
+
+            $this->addFlash(           // permet d'ajouter un message de confirmation
+                'success',
+                'Votre compte est correctement crée, veuillez vous connectez.'
+            );
+            return $this->redirectToRoute('app_login');  // redirection vers la page de login si tout se passe bien. ici, tu peux aussi rediriger vers une page de confirmation ou une page de redirection spécifique.
+            
         }
 
         // tu enregistre les datas en bdd
