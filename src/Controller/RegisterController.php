@@ -31,7 +31,7 @@ class RegisterController extends AbstractController
 
             $this->addFlash(           // permet d'ajouter un message de confirmation
                 'success',
-                'Votre compte est correctement crée, veuillez vous connectez.'
+                "Votre compte est correctement crée, veuillez vous connectez."
             );
             return $this->redirectToRoute('app_login');  // redirection vers la page de login si tout se passe bien. ici, tu peux aussi rediriger vers une page de confirmation ou une page de redirection spécifique.
             
