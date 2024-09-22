@@ -93,6 +93,16 @@ class Product
         return $this->price;
     }
 
+    //----------------------------------------------------------------
+    // function pour calculé le prix ht en ttc function getPriceWt (convention pour le calcul)
+    public function getPriceWt()
+    {
+        $coeff = 1 + ($this->tva/100);
+        return $coeff * $this->price;
+    }
+
+    //----------------------------------------------------------------
+
     public function setPrice(float $price): static
     {
         $this->price = $price;

@@ -32,6 +32,15 @@ class Category
         $this->products = new ArrayCollection();
     }
 
+    // --------------------------------------------------------------------
+    // function pour indiqué à l'entity category comment afficher en tant que chaine de caractere et pas en objet dans le easy admin (choix d'un produit dans la categorie)
+    public function __tostring()
+    {
+        return $this->name;
+    }
+
+    //----------------------------------------------------------------
+
     public function getId(): ?int
     {
         return $this->id;
