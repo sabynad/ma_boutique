@@ -33,11 +33,26 @@ class ProductCrudController extends AbstractCrudController
    
     public function configureFields(string $pageName): iterable
     {
+
+        // condition pour que le setRequired de l'ImageField sois pas requis lors de l'edit.
+        $required = true;
+        if($pageName == 'edit') {
+            $required = false;
+        }
+
+
         return [
             TextField::new('name')->setLabel('Nom')->setHelp('Nom de votre produit'),
             SlugField::new('slug')->setTargetFieldName('name')->setlabel('URL')->setHelp('URL de la catégorie générée automatiquement'), 
             TextEditorField::new('description')->setLabel('Description')->setHelp('Description de votre produit'),
-            ImageField::new('image')->setLabel('Image')->setHelp('Image du produit')->setUploadDir('/public/uploads')->setUploadedFileNamePattern('[year]-[month]-[contenthash].[extension]')->setBasePath('uploads'), // setBasePath affiche l'image de easyAdmin
+            ImageField::new('image')
+                ->setLabel('Image')
+                ->setHelp('Image du produit')
+                ->setUploadDir('/public/uploads')
+                ->setUploadedFileNamePattern('[year]-[month]-[contenthash].[extension]')
+                ->setBasePath('uploads') // setBasePath affiche l'image de easyAdmin
+                ->setRequired($required), // pour eviter lors d'une modification dans un crud de retelecharger l'image
+
             NumberField::new('price')->setLabel('Prix H.T')->setHelp('Prix du produit Hors Taxes sans le sigle €'),
             ChoiceField::new('tva')->setLabel('Taux de TVA')->setChoices([
                 '5,5%' => '5.5',

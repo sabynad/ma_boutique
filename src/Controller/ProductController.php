@@ -15,6 +15,11 @@ class ProductController extends AbstractController
         // dd($slug);
         $product = $productRepository->findOneBySlug($slug);
 
+        // reconduction vers la page home plutot que la page erreur au cas ou l'utilisateur rentre un produit non reférencer dans l'url
+        if (!$product) {
+            return $this->redirectToRoute('app_home');
+        }
+
         // dd($product);
         return $this->render('product/index.html.twig', [
             'product' => $product,

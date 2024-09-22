@@ -15,6 +15,11 @@ class CategoryController extends AbstractController
         
         $category = $categoryRepository->findOneBySlug($slug);
         // dd($category);
+
+         // reconduction vers la page home plutot que la page erreur au cas ou l'utilisateur rentre une categorie non reférencer dans l'url
+        if (!$category) {
+            return $this->redirectToRoute('app_home');
+        }
         
         return $this->render('category/index.html.twig', [
             'category' => $category,
