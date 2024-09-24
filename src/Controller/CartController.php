@@ -40,4 +40,16 @@ class CartController extends AbstractController
         // dd('produit ajouté au panier');
     }
 
+
+    // Supprimer les produits du panier
+    #[Route('/cart/remove', name: 'app_cart_remove')]
+    public function remove(Cart $cart): Response
+    {
+        
+        $cart->remove();
+        
+        return $this->redirectToRoute('app_home',);
+        
+    }
+
 }
