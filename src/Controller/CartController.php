@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use id;
 use App\Classe\Cart;
 use App\Repository\ProductRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CartController extends AbstractController
 {
@@ -14,15 +16,17 @@ class CartController extends AbstractController
     public function index(Cart $cart): Response
     {
         return $this->render('cart/index.html.twig', [
-            'cart' => $cart->getCart() 
+            'cart' => $cart->getCart(), 
+            'totalWt' => $cart->getTotalWt()
         ]);
     }
 
 
     // ajout d'un produit au panier
     #[Route('/cart/add/{id}', name: 'app_cart_add')]
-    public function add($id, Cart $cart, ProductRepository $productRepository ): Response
+    public function add($id, Cart $cart, ProductRepository $productRepository, Request $request ): Response
     {
+        // dd($request->headers->get('referer'));
         
         $product = $productRepository->findOneById($id);
 
@@ -33,9 +37,25 @@ class CartController extends AbstractController
             "Produit correctement ajouter a votre panier."
         );
 
-        return $this->redirectToRoute('app_product', [
-            'slug' => $product->getSlug()
-        ]);
+        return $this->redirect($request->headers->get('referer')); // ajoute un produit avec le + et redirige au panier
+
+        // dd('produit ajouté au panier');
+    }
+    
+
+    // diminue un produit du panier
+    #[Route('/cart/decrease/{id}', name: 'app_cart_decrease')]
+    public function decrease($id, Cart $cart): Response
+    {
+
+        $cart->decrease($id);
+        
+        $this->addFlash(           // permet d'ajouter un message de confirmation
+            'success',
+            "Produit correctement supprimée de votre panier."
+        );
+
+        return $this->redirectToRoute('app_cart'); // redirige vers le panier
 
         // dd('produit ajouté au panier');
     }

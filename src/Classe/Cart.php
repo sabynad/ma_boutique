@@ -36,8 +36,66 @@ class Cart
 
         // dd($this->requestStack->getSession()->get('cart'));
     }
+    //---------
 
-    // suppression des produits panier
+
+
+    // decrease enlever un element du panier-------------------
+    public function decrease($id)
+    {
+        $cart = $this->requestStack->getSession()->get(name: 'cart');
+
+        if ($cart[$id]['qty'] > 1) {
+            $cart[$id]['qty'] = $cart[$id]['qty'] - 1;
+        }else {
+            unset($cart[$id]);
+        }
+
+        $this->requestStack->getSession()->set('cart', $cart);
+    }
+    //------
+
+
+    // calcule totale de la quantité de produit dans le panier-------------------
+    public function fullQuantity()
+    {
+        $cart = $this->requestStack->getSession()->get(name: 'cart');
+        $quantity = 0;
+
+        if (!isset($cart)) {    
+            return $quantity;
+        }
+
+        foreach ( $cart as $product ) {
+            $quantity = $quantity + $product['qty'];
+        }
+
+        // dd($quantity);
+        return $quantity;
+    }
+    //------
+
+
+    // calcule le prix total du panier ttc-------------------
+    public function getTotalWt()
+    {
+        $cart = $this->requestStack->getSession()->get(name: 'cart');
+        $price = 0;
+
+        if (!isset($cart)) {    
+            return $price;
+        }
+
+        foreach ( $cart as $product ) {
+            $price = $price + ($product['object']->getPriceWt() * $product['qty']);
+        }
+
+        return $price;
+    }
+    //--------------------------------
+
+
+    // suppression des produits panier-------------------------
     public function remove()
     {
         return $this->requestStack->getSession()->remove('cart');
@@ -47,5 +105,6 @@ class Cart
     {
         return $this->requestStack->getSession()->get('cart');
     }
+    //------
 
 }
