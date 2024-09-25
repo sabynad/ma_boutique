@@ -15,7 +15,7 @@ class Cart
     public function add($product)
     {
         // appeler la session cart de symfony
-         $cart = $this->requestStack->getSession()->get('cart'); // permet de pas ecraser l'article du panier en cours
+        $cart = $this->getCart(); 
 
         // Ajouter une quantité +1 à mon produit condition si ajoute deux fois le meme produit la quantité une nouvelle fois de +1
         // si dans le panier le produit existe déjà
@@ -43,7 +43,7 @@ class Cart
     // decrease enlever un element du panier-------------------
     public function decrease($id)
     {
-        $cart = $this->requestStack->getSession()->get(name: 'cart');
+        $cart = $this->getCart();
 
         if ($cart[$id]['qty'] > 1) {
             $cart[$id]['qty'] = $cart[$id]['qty'] - 1;
@@ -59,7 +59,7 @@ class Cart
     // calcule totale de la quantité de produit dans le panier-------------------
     public function fullQuantity()
     {
-        $cart = $this->requestStack->getSession()->get(name: 'cart');
+        $cart = $this->getCart();
         $quantity = 0;
 
         if (!isset($cart)) {    
@@ -79,7 +79,7 @@ class Cart
     // calcule le prix total du panier ttc-------------------
     public function getTotalWt()
     {
-        $cart = $this->requestStack->getSession()->get(name: 'cart');
+        $cart = $this->getCart();
         $price = 0;
 
         if (!isset($cart)) {    
@@ -95,12 +95,14 @@ class Cart
     //--------------------------------
 
 
-    // suppression des produits panier-------------------------
+    // suppression total des produits dans le panier-------------------------
     public function remove()
     {
         return $this->requestStack->getSession()->remove('cart');
     }
 
+
+    // fonction retournant le panier------------------------
     public function getCart() 
     {
         return $this->requestStack->getSession()->get('cart');
