@@ -56,4 +56,3 @@ class PasswordController extends AbstractController
     
 }
 
-?>
