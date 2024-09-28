@@ -23,6 +23,15 @@ class Carrier
     #[ORM\Column]
     private ?float $price = null;
 
+    // fonction pour afficher correctement le choix du transporteur dans la commande
+    public function __toString()
+    {
+        $price = number_format($this->getPrice(), '2', decimal_separator: ','). ' €';
+
+        return $this->getName().'<br/>'.$price.'<br/>'.$this->getDescription();
+    }
+    //----------------------------------------------------------------
+
     public function getId(): ?int
     {
         return $this->id;
