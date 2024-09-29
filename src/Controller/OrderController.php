@@ -14,8 +14,14 @@ class OrderController extends AbstractController
     #[Route('/commande/livraison', name: 'app_order')]
     public function index(): Response
     {
+        $addresses = $this->getUser()->getAddresses();
+
+        if (count($addresses) == 0) {
+            return $this->redirectToRoute('app_account_address_form');
+        }
+
         $form = $this->createForm(OrderType::class, null, [
-            'addresses' => $this->getUser()->getAddresses(),
+            'addresses' => $addresses
         ]);
 
         return $this->render('order/index.html.twig', [

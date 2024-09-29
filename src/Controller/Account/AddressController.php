@@ -2,6 +2,7 @@
 
 namespace App\Controller\Account;
 
+use App\Classe\Cart;
 use App\Entity\Address;
 use App\Form\AddressUserType;
 use App\Repository\AddressRepository;
@@ -54,7 +55,7 @@ class AddressController extends AbstractController
 
     // Formulaire ajout adresses ------------------------------------------------------------------------
     #[Route('/compte/adresse/ajouter/{id}', name: 'app_account_address_form', defaults: ['id' => null] )]
-    public function form(Request $request, $id, AddressRepository $addressRepository): Response
+    public function form(Request $request, $id, AddressRepository $addressRepository, Cart $cart): Response
     {
         if ($id) {
             $address = $addressRepository->findOneById($id);
@@ -80,6 +81,12 @@ class AddressController extends AbstractController
                 type: 'success',
                 message: "Votre adresse est correctement sauvegardée."
             );
+
+            if ($cart->fullQuantity() > 0) {
+                return $this->redirectToRoute("app_order");
+            }
+
+
             return $this->redirectToRoute('app_account_addresses'); // redirection vers la page de mes adresses si tout se passe bien. ici, tu peux aussi rediriger vers une page de confirmation ou une page de redirection spécifique.
         }
 
