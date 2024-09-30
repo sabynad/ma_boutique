@@ -20,6 +20,10 @@ class Order
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    // 1: En attente de paiement
+    // 2: Paiment validé
+    // 3: Expédié
+
     #[ORM\Column(length: 255)]
     private ?string $carrierName = null;
 
@@ -32,8 +36,11 @@ class Order
     /**
      * @var Collection<int, OrderDetail>
      */
-    #[ORM\OneToMany(targetEntity: OrderDetail::class, mappedBy: 'myOrder')]
+    #[ORM\OneToMany(targetEntity: OrderDetail::class, mappedBy: 'myOrder', cascade: ['persist'])]
     private Collection $orderDetails;
+
+    #[ORM\Column]
+    private ?int $state = null;
 
     public function __construct()
     {
@@ -81,6 +88,18 @@ class Order
         return $this;
     }
 
+    public function getState(): ?int
+    {
+        return $this->state;
+    }
+
+    public function setState(int $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
     public function getDelivery(): ?string
     {
         return $this->delivery;
@@ -122,4 +141,6 @@ class Order
 
         return $this;
     }
+
+   
 }
