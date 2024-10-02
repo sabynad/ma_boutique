@@ -42,10 +42,49 @@ class Order
     #[ORM\Column]
     private ?int $state = null;
 
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
     }
+
+    // Calcule total de la commande pour l'afficher dans le easyAdmin 
+    public function getTotalWt()
+    {
+        $totalTTC = 0;
+        $products = $this->getOrderDetails();
+
+        foreach ($products as $product) {
+            // dd($product);
+            $coeff = 1 + ($product->getProductTva() / 100);
+            // dd($product->getProductPrice() * $coeff);
+            $totalTTC += ($product->getProductPrice() * $coeff) * $product->getProductQuantity();
+        }
+
+        return $totalTTC + $this->getCarrierPrice();
+    }
+    //-------------------------------------------------------------------------
+
+
+    // Calcule TVA total de la commande pour l'afficher dans le easyAdmin 
+    public function getTotalTva()
+    {
+        $totalTva = 0;
+        $products = $this->getOrderDetails();
+
+        foreach ($products as $product) {
+            // dd($product);
+            $coeff = $product->getProductTva() / 100;
+            // dd($product->getProductPrice() * $coeff);
+            $totalTva += $product->getProductPrice() * $coeff;
+        }
+        return $totalTva;
+    }
+    //-------------------------------------------------------------------------
+
 
     public function getId(): ?int
     {
@@ -138,6 +177,18 @@ class Order
                 $orderDetail->setMyOrder(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
