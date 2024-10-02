@@ -16,11 +16,19 @@ class PaymentController extends AbstractController
     public function index($id_order, OrderRepository $orderRepository): Response
     {
 
-        Stripe::setApiKey('sk_test_51Q5OYhRqrTBtMpleeRxr7lubfBAQXw494dLxgiE6wqJWjFWZryUrBPEk7fx2rdM1um91OFChQdJ6VF7phyebTcR000ll3WOxgj');
-        $YOUR_DOMAIN = 'http://127.0.0.1:8000';
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
 
-        $order = $orderRepository->findOneById($id_order);
+        // element de securité dans l'url pour ne pas recuperer la commande d'un autre utilisateur
+        $order = $orderRepository->findOneBy([
+            'id' => $id_order,
+            'user' => $this->getUser()
+        ]);
+
+        if (!$order) {
+            return $this->redirectToRoute('app_home');
+        }
+        //----------------------------------------------------------------
 
         $products_for_stripe = [];
 
@@ -32,7 +40,7 @@ class PaymentController extends AbstractController
                   'product_data' => [
                       'name' => $product->getProductName(),
                       'images' => [
-                        $YOUR_DOMAIN.'/uploads/'.$product->getProductImage()
+                        $_ENV['DOMAIN'].'/uploads/'.$product->getProductImage()
                       ]
                   ]
                 ],
@@ -62,8 +70,8 @@ class PaymentController extends AbstractController
                 $products_for_stripe
             ]],
             'mode' => 'payment',
-            'success_url' => $YOUR_DOMAIN . '/success.html',
-            'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
+            'success_url' => $_ENV['DOMAIN'] . '/success.html',
+            'cancel_url' => $_ENV['DOMAIN'] . '/cancel.html',
           ]);
 
         return $this->redirect($checkout_session->url);
