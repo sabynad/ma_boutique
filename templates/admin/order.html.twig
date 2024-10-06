@@ -8,7 +8,8 @@
     <br/>
     <br/>
 
-    <span> Passée le: {{ order.createdAt|date('d/m/Y') }} </span>
+    <span> Passée le: {{ order.createdAt|date('d/m/Y') }} </span> <br/>
+    <span> Stripe session Id : {{ order.stripeSessionId }} </span> 
 
     <div class="row my-4">
         <div class="col md-6">
