@@ -100,7 +100,6 @@ class Product
         $coeff = 1 + ($this->tva/100);
         return $coeff * $this->price;
     }
-
     //----------------------------------------------------------------
 
     public function setPrice(float $price): static
