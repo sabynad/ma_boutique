@@ -26,9 +26,12 @@ class Mail
                             'Name' => $to_name
                         ]
                     ],
+                    'TemplateId' => 6364145,
+                    'TemplateLanguage' => true,
                     'Subject' => $subject,
-                    'TextPart' => "Greetings from Mailjet!",
-                    'HTMLPart' => $content
+                    'Variables' => [
+                        'content' => $content
+                    ]
                 ]
             ]
         ];
