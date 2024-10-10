@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Classe\Mail;
 use App\Entity\User;
 use App\Form\RegisterUserType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,12 +34,18 @@ class RegisterController extends AbstractController
                 'success',
                 "Votre compte est correctement crée, veuillez vous connectez."
             );
+
+            // Envoie d'un email de confirmation d'inscription
+            $mail = new Mail();
+            $vars = [
+                'firstname' => $user->getFirstname()
+            ];
+            $mail->send($user->getEmail(), $user->getFirstname().' '. $user->getLastname(), "Bienvenue sur ShopyClub", "welcome.html", $vars);
+
+
             return $this->redirectToRoute('app_login');  // redirection vers la page de login si tout se passe bien. ici, tu peux aussi rediriger vers une page de confirmation ou une page de redirection spécifique.
             
         }
-
-        // tu enregistre les datas en bdd
-        // tu envoies un message de confirmation du compte bien crée
 
         return $this->render('register/index.html.twig', [
             'registerForm' => $form->createView(),
